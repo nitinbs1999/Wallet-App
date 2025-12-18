@@ -39,14 +39,14 @@ public class WalletController
         int balance=userService.getBalance(walletId);
         return ResponseEntity.ok(balance);
     }
-    @PostMapping("/{walletId}/Deposit")
+    @PostMapping("/{walletId}/deposit")
     public ResponseEntity<TransactionResponse> Deposit(@PathVariable String walletId,@RequestBody TransactionRequest request){
 
          TransactionResponse transaction=userService.deposit(walletId, request.getAmount());
          return ResponseEntity.ok(transaction);
     }
 
-    @PostMapping("/{walletId}/Withdraw")
+    @PostMapping("/{walletId}/withdraw")
     public ResponseEntity<TransactionResponse> Withdraw(@PathVariable String walletId,@RequestBody TransactionRequest request){
 
       TransactionResponse transaction=userService.withdraw(walletId, request.getAmount());

@@ -82,7 +82,7 @@ public class WalletControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.waletId").value("snitin6528"))
+                .andExpect(jsonPath("$.walletId").value("snitin6528"))
                 .andExpect(jsonPath("$.transactionId").value("UTR001"))
                 .andExpect(jsonPath("$.balanceAfter").value(500))
                 .andExpect(jsonPath("$.type").value("DEPOSIT"));

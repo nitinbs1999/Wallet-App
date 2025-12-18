@@ -8,12 +8,13 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.*;
-
+//always use builder with noargsconstructor and allargsconstructor
 @Entity
 @Table(name = "transactions")
 @Getter
@@ -23,6 +24,7 @@ import lombok.*;
 @Builder
 public class Transaction {
  //indexing
+ @Id
  @GeneratedValue(strategy = GenerationType.IDENTITY)
  private Long id;
  //uniq transaction id

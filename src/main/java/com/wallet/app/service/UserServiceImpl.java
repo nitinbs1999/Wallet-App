@@ -1,6 +1,8 @@
 package com.wallet.app.service;
 
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 
 import com.wallet.app.dto.Status;
@@ -44,6 +46,7 @@ public class UserServiceImpl implements UserService
                                             .walletId(wallet.getWalletId())
                                             .balance(wallet.getBalance())
                                             .status(Status.ACTIVE)
+                                             .ownerName(wallet.getOwner())
                                             .build();
         return response;
     }
@@ -65,7 +68,7 @@ public class UserServiceImpl implements UserService
         int balance_after=wallet.getBalance()+amount;
          wallet.setBalance(balance_after);
          walletRepository.save(wallet);
-         Transaction transaction=Transaction.builder().transactionId("123")
+         Transaction transaction=Transaction.builder().transactionId(UUID.randomUUID().toString())
                                   .amount(amount)
                                   .balanceAfter(balance_after)
                                   .type(TransactionType.DEPOSIT)
@@ -87,10 +90,10 @@ public class UserServiceImpl implements UserService
         }
          wallet.setBalance(balance_after);
          walletRepository.save(wallet);
-         Transaction transaction=Transaction.builder().transactionId("123")
+         Transaction transaction=Transaction.builder().transactionId(UUID.randomUUID().toString())
                                   .amount(amount)
                                   .balanceAfter(balance_after)
-                                  .type(TransactionType.DEPOSIT)
+                                  .type(TransactionType.WITHDRAW)
                                   .wallet(wallet)
                                   .build();
          //save this transaction
