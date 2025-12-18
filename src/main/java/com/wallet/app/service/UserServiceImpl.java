@@ -1,9 +1,6 @@
 package com.wallet.app.service;
 
-import java.lang.module.ResolutionException;
-import java.util.Optional;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.wallet.app.dto.Status;
@@ -25,6 +22,12 @@ public class UserServiceImpl implements UserService
 
  private final WalletRepository walletRepository;    
  private final TransactionRepository transactionRepository;
+
+ public UserServiceImpl(WalletRepository walletRepository, TransactionRepository transactionRepository){
+    this.walletRepository=walletRepository;
+    this.transactionRepository=transactionRepository;
+ }
+
 
 
     @Override

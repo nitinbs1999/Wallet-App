@@ -7,11 +7,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 @Entity
-@Table(name="wallets")
-@Data
+@Table(name = "wallets")
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // REQUIRED by JPA
+@AllArgsConstructor
 @Builder
 public class Wallet 
 {
