@@ -11,7 +11,7 @@ import com.wallet.app.model.Wallet;
 public interface WalletRepository extends JpaRepository<Wallet, String>
 {
     
-     Wallet findByWalletId(String walletId);
+     Optional<Wallet> findByWalletId(String walletId);
 
      boolean existsBywalletId(String walletId);
 }

@@ -10,11 +10,12 @@ import com.wallet.app.dto.Status;
 import com.wallet.app.dto.TransactionResponse;
 import com.wallet.app.dto.WalletRequest;
 import com.wallet.app.dto.WalletResponse;
+import com.wallet.app.exception.InsufficientBalanceException;
+import com.wallet.app.exception.WalletNotFoundException;
 import com.wallet.app.model.Transaction;
 import com.wallet.app.model.TransactionType;
 import com.wallet.app.model.Wallet;
 import com.wallet.app.repository.TransactionRepository;
-import com.wallet.app.repository.UserRepository;
 import com.wallet.app.repository.WalletRepository;
 
 @Service
@@ -28,20 +29,16 @@ public class UserServiceImpl implements UserService
 
     @Override
     public WalletResponse create(WalletRequest request) {
-        // TODO Auto-generated method stub
-        //if wallet id already exist
-       if(walletRepository.existsBywalletId(request.getWalletId())){
-            throw new WalletFoundException("wallet already exists");
-       }
+        // TODO Auto-generated method stus
 
-        Wallet wallet= Wallet.builder().wallet_id(request.getWalletId())
+        Wallet wallet= Wallet.builder().walletId(request.getWalletId())
                        .balance(request.getBalance())
                        .owner(request.getOwnerName())
                        .build();
          //save this wallet
          walletRepository.save(wallet);
          WalletResponse response=WalletResponse.builder()
-                                            .walletId(wallet.getWallet_id())
+                                            .walletId(wallet.getWalletId())
                                             .balance(wallet.getBalance())
                                             .status(Status.ACTIVE)
                                             .build();
@@ -50,19 +47,22 @@ public class UserServiceImpl implements UserService
 
     @Override
     public int getBalance(String walletId) {
+
+        //check walletId exists or not
         
-        return walletRepository.findByWalletId(walletId).getBalance();
-           
+        Wallet wallet=walletRepository.findByWalletId(walletId).orElseThrow(() -> new WalletNotFoundException("Wallet Id not found!"));
+        
+        return wallet.getBalance();
     }
 
     @Override
     public TransactionResponse deposit(String walletId, int amount) {
         // TODO Auto-generated method stub
-         Wallet wallet=walletRepository.findByWalletId(walletId);
-         int balance_after=wallet.getBalance()+amount;
+        Wallet wallet=walletRepository.findByWalletId(walletId).orElseThrow(() -> new WalletNotFoundException("Wallet Id not found!"));
+        int balance_after=wallet.getBalance()+amount;
          wallet.setBalance(balance_after);
          walletRepository.save(wallet);
-         Transaction transaction=Transaction.builder().transaction_id("123")
+         Transaction transaction=Transaction.builder().transactionId("123")
                                   .amount(amount)
                                   .balanceAfter(balance_after)
                                   .type(TransactionType.DEPOSIT)
@@ -77,11 +77,14 @@ public class UserServiceImpl implements UserService
     @Override
     public TransactionResponse withdraw(String walletId, int amount) {
 
-         Wallet wallet=walletRepository.findByWalletId(walletId);
-         int balance_after=wallet.getBalance()-amount;
+        Wallet wallet=walletRepository.findByWalletId(walletId).orElseThrow(() -> new WalletNotFoundException("Wallet Id not found!"));
+        int balance_after=wallet.getBalance()-amount;
+        if(balance_after<0){
+            throw new InsufficientBalanceException("Insufficient balance in account!");
+        }
          wallet.setBalance(balance_after);
          walletRepository.save(wallet);
-         Transaction transaction=Transaction.builder().transaction_id("123")
+         Transaction transaction=Transaction.builder().transactionId("123")
                                   .amount(amount)
                                   .balanceAfter(balance_after)
                                   .type(TransactionType.DEPOSIT)
@@ -96,8 +99,8 @@ public class UserServiceImpl implements UserService
     public TransactionResponse maptoDto(Transaction transaction)
     {
         TransactionResponse response=TransactionResponse.builder()
-                                                        .transactionId(transaction.getTransaction_id())
-                                                        .walletId(transaction.getWallet().getWallet_id())
+                                                        .transactionId(transaction.getTransactionId())
+                                                        .walletId(transaction.getWallet().getWalletId())
                                                         .amount(transaction.getAmount())
                                                         .balanceAfter(transaction.getBalanceAfter())
                                                         .type(transaction.getType())

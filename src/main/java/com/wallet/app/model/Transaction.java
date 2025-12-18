@@ -25,11 +25,11 @@ public class Transaction {
  private Long id;
  //uniq transaction id
  @Column(nullable=false, unique = true)
- private String transaction_id;
+ private String transactionId;
 
  //we are taking wallet id as foreign key for this table
  @ManyToOne(fetch= FetchType.LAZY)
- @JoinColumn(name="wallet_id",nullable = false)
+ @JoinColumn(name="walletId",nullable = false)
  private Wallet wallet;
  
 @Enumerated(EnumType.STRING)
