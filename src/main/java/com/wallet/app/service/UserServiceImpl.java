@@ -34,7 +34,12 @@ public class UserServiceImpl implements UserService
 
     @Override
     public WalletResponse create(WalletRequest request) {
-        // TODO Auto-generated method stus
+        // Check if wallet already exists
+        if (walletRepository.findByWalletId(request.getWalletId()).isPresent()) {
+            throw new com.wallet.app.exception.WalletAlreadyExistsException(
+                "Wallet with ID '" + request.getWalletId() + "' already exists"
+            );
+        }
 
         Wallet wallet= Wallet.builder().walletId(request.getWalletId())
                        .balance(request.getBalance())

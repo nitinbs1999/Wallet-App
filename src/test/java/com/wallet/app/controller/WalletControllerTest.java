@@ -78,7 +78,7 @@ public class WalletControllerTest {
         TransactionRequest request=new TransactionRequest(TransactionType.DEPOSIT, 500);
         TransactionResponse mockResponse=new TransactionResponse("UTR001", walletId, TransactionType.DEPOSIT, 500, 500);
         Mockito.when(userService.deposit(walletId, 500)).thenReturn(mockResponse);
-         mockMvc.perform(post("/api/v1/wallets/{walletId}/deposit")
+         mockMvc.perform(post("/api/v1/wallets/{walletId}/deposit", walletId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -97,11 +97,11 @@ public class WalletControllerTest {
         TransactionRequest request=new TransactionRequest(TransactionType.WITHDRAW, 500);
         TransactionResponse mockResponse=new TransactionResponse("UTR001", walletId, TransactionType.WITHDRAW, 500, 0);
         Mockito.when(userService.withdraw(walletId, 500)).thenReturn(mockResponse);
-         mockMvc.perform(post("/api/v1/wallets/{walletId}/withdraw")
+         mockMvc.perform(post("/api/v1/wallets/{walletId}/withdraw", walletId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.waletId").value("snitin6528"))
+                .andExpect(jsonPath("$.walletId").value("snitin6528"))
                 .andExpect(jsonPath("$.transactionId").value("UTR001"))
                 .andExpect(jsonPath("$.balanceAfter").value(0))
                 .andExpect(jsonPath("$.type").value("WITHDRAW"));
